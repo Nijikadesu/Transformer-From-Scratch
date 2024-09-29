@@ -2,13 +2,15 @@ import torch
 import torch.nn as nn
 
 class LayerNormalization(nn.Module):
-
+    """
+    Implementation of Layer Normalization Mechanism.
+    """
     def __init__(self, parameters_shape, eps=1e-5):
         super().__init__()
         self.parameters_shape = parameters_shape
-        self.eps = eps
-        self.gamma = nn.Parameter(torch.ones(parameters_shape))
-        self.beta = nn.Parameter(torch.zeros(parameters_shape))
+        self.eps = eps # eps is introduced to prevent the denominator std being zero
+        self.gamma = nn.Parameter(torch.ones(parameters_shape)) # learnable scale parameter
+        self.beta = nn.Parameter(torch.zeros(parameters_shape)) # learnable bias parameter
 
     def forward(self, input):
         dims = [-(i + 1) for i in range(len(self.parameters_shape))]

@@ -2,7 +2,9 @@ import torch
 import torch.nn as nn
 
 class PositionalEncoding(nn.Module):
-
+    """
+    Implementation of Positional Encoding Mechanisim.
+    """
     def __init__(self, d_model, max_sequence_length):
         super().__init__()
         self.max_sequence_length = max_sequence_length

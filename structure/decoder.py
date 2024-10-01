@@ -23,14 +23,14 @@ class DecoderLayer(nn.Module):
         self.norm3 = LayerNormalization(parameters_shape=[d_model])
         self.dropout3 = nn.Dropout(p=drop_prob)
 
-    def forward(self, x, y, mask=None):
+    def forward(self, x, y, self_mask=None, cross_mask=None):
         residual_y = y
-        y = self.self_attention(y, mask=mask)
+        y = self.self_attention(y, mask=self_mask)
         y = self.dropout1(y)
         y = self.norm1(y + residual_y)
 
         residual_y = y
-        y = self.cross_attention(x, y, mask=None)
+        y = self.cross_attention(x, y, mask=cross_mask)
         y = self.dropout2(y)
         y = self.norm2(y + residual_y)
 
@@ -49,9 +49,9 @@ class SequentialDecoder(nn.Sequential):
     This SequentialDecoder Provides a Complete Data Flow of Transformer Decoder.
     """
     def forward(self, *inputs):
-        x, y, mask = inputs
+        x, y, self_mask, cross_mask = inputs
         for module in self._modules.values():
-            y = module(x, y, mask)
+            y = module(x, y, self_mask, cross_mask)
         return y
 
 class Decoder(nn.Module):
@@ -65,6 +65,6 @@ class Decoder(nn.Module):
                                                    num_heads=num_heads,
                                                    drop_prob=drop_prob) for _ in range(num_layers)])
 
-    def forward(self, x, y, mask=None):
-        y = self.layers(x, y, mask)
+    def forward(self, x, y, self_mask=None, cross_mask=None):
+        y = self.layers(x, y, self_mask=self_mask, cross_mask=cross_mask)
         return y

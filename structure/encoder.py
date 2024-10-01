@@ -19,9 +19,9 @@ class EncoderLayer(nn.Module):
         self.norm2 = LayerNormalization(parameters_shape=[d_model])
         self.dropout2 = nn.Dropout(p=drop_prob)
 
-    def forward(self, x):
+    def forward(self, x, mask=None):
         residual_x = x
-        x = self.attention(x, mask=None)
+        x = self.attention(x, mask=mask)
         x = self.dropout1(x)
         x = self.norm1(x + residual_x)
 
@@ -42,6 +42,6 @@ class Encoder(nn.Module):
                                                    num_heads=num_heads,
                                                    drop_prob=drop_prob) for _ in range(num_layers)])
 
-    def forward(self, x):
-        x = self.layers(x)
+    def forward(self, x, mask=None):
+        x = self.layers(x, mask=mask)
         return x

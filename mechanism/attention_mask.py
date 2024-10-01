@@ -4,10 +4,12 @@ import numpy as np
 import math
 
 class AttentionMask():
-
-    def __init__(self, max_sequence_length, NEG_INFTY=1e-9):
-        self.NEG_INFTY = NEG_INFTY
-        self.max_sequence_length = max_sequence_length
+    """
+    Create Mask For Self-attention & Cross-attention
+    """
+    def __init__(self, cfg):
+        self.NEG_INFTY = cfg.NEG_INFTY
+        self.max_sequence_length = cfg.max_sequence_length
 
     def create_masks(self, source_language_batch, target_language_batch):
         num_sentences = len(source_language_batch)

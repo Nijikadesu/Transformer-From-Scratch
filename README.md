@@ -30,7 +30,7 @@
 │   ├──encoder.py                       # 编码器
 │   └──decoder.py                       # 解码器
 ├── config.py                           # 训练配置
-├── dataset.py                          # 数据集，继承 nn.Dataset
+├── dataset.py                          # 数据集，继承 torch.utils.data.Dataset
 ├── train.py                            # 训练文件
 └── transformer.py                      # 完整 Transformer 模型
 ```

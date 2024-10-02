@@ -13,26 +13,26 @@
 
 ## 项目结构
 ```text
-└── data                                # 训练用数据集
+└── data                            # 训练用数据集
 │   ├──english.txt                      # 英文数据集
 │   └──kannada.txt                      # 卡纳达语数据集
-├── data_utils                          # 数据处理工具
+├── data_utils                      # 数据处理工具
 │   ├──read_file.py                     # 读取文本数据，并切片欲处理
 │   └──tokenizer.py                     # 文本转数字 token ，并加入位置嵌入
-├── mechanism                           # Transformer 模型机制
+├── mechanism                       # Transformer 模型机制
 │   ├──attention_mask.py                # 注意力掩码
 │   ├──feed_forward.py                  # 前向传播神经网络
 │   ├──layer_normalization.py           # 层归一化
 │   ├──multihead-attention.py           # 多头自注意力
 │   ├──multihead-cross-attention.py     # 多头交叉注意力
 │   └──positional_encoding.py           # 位置嵌入
-├── structure                           # 模型架构
+├── structure                       # 模型架构
 │   ├──encoder.py                       # 编码器
 │   └──decoder.py                       # 解码器
 ├── config.py                           # 训练配置
-├── dataset.py                          # 数据集，继承 torch.utils.data.Dataset
-├── train.py                            # 训练文件
-└── transformer.py                      # 完整 Transformer 模型
+├── dataset.py                      # 数据集，继承 torch.utils.data.Dataset
+├── train.py                        # 训练文件
+└── transformer.py                  # 完整 Transformer 模型
 ```
 
 ## 环境配置

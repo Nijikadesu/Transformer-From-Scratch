@@ -8,11 +8,12 @@ class SentenceTokenizer(nn.Module):
     def __init__(self, cfg, language='target'):
         super().__init__()
         language_to_index = cfg.source_to_index if language == 'source' else cfg.target_to_index
-        self.vocab_size = len(language_to_index)
-        self.max_sequence_size = cfg.max_sequence_size
-        self.embedding = nn.Embedding(self.vocab_size, cfg.d_model)
+        self.device = cfg.device
+        self.vocab_length = len(language_to_index)
+        self.max_sequence_length = cfg.max_sequence_length
+        self.embedding = nn.Embedding(self.vocab_length, cfg.d_model)
         self.language_to_index = language_to_index
-        self.position_encoder = PositionalEncoding(cfg.d_model, cfg.max_sequence_size)
+        self.position_encoder = PositionalEncoding(cfg.d_model, cfg.max_sequence_length)
         self.dropout = nn.Dropout(p=0.1)
         self.START_TOKEN = cfg.START_TOKEN
         self.END_TOKEN = cfg.END_TOKEN
@@ -38,7 +39,9 @@ class SentenceTokenizer(nn.Module):
 
     def forward(self, x, start_token=True, end_token=True):
         x = self.batch_tokenize(x, start_token, end_token)
+        x = x.to(self.device)
         x = self.embedding(x)
         pos = self.position_encoder()
+        pos = pos.to(self.device)
         x = self.dropout(x + pos)
         return x

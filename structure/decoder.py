@@ -56,7 +56,7 @@ class SequentialDecoder(nn.Sequential):
 
 class Decoder(nn.Module):
     """
-    Implementation of Transformer Decoder Architecture, including 5 Decoder Layers.
+    Implementation of Transformer Decoder Architecture, including 6 Decoder Layers.
     """
     def __init__(self, d_model, ffn_hidden, num_heads, drop_prob=0.1, num_layers=6):
         super().__init__()
@@ -66,5 +66,5 @@ class Decoder(nn.Module):
                                                    drop_prob=drop_prob) for _ in range(num_layers)])
 
     def forward(self, x, y, self_mask=None, cross_mask=None):
-        y = self.layers(x, y, self_mask=self_mask, cross_mask=cross_mask)
+        y = self.layers(x, y, self_mask, cross_mask)
         return y

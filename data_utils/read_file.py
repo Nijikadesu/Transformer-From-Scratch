@@ -11,7 +11,7 @@ class DataProcessor():
         return True
 
     def is_valid_length(self, sentence):
-        return len(list(sentence)) < (self.cfg.max_sequence_size - 1) # leave 1 space for end token
+        return len(list(sentence)) < (self.cfg.max_sequence_length - 1) # leave 1 space for end token
 
     def read_data(self):
         with open(self.cfg.source_file, 'r', encoding='utf-8') as file:

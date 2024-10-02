@@ -31,17 +31,28 @@ class EncoderLayer(nn.Module):
         x = self.norm2(x + residual_x)
         return x
 
+class SequentialEncoder(nn.Sequential):
+    """
+    An Encoder-based Sequential Network inorder to pass x and mask forward.
+    Used when there are more than one variable in the forward function.
+    """
+    def forward(self, *inputs):
+        x, mask = inputs
+        for module in self._modules.values():
+            x = module(x, mask)
+        return x
+
 class Encoder(nn.Module):
     """
     Implementation of Transformer Encoder Architecture, Including 6 Encoder Layers.
     """
     def __init__(self, d_model, ffn_hidden, num_heads, drop_prob=0.1, num_layers=6):
         super().__init__()
-        self.layers = nn.Sequential(*[EncoderLayer(d_model=d_model,
+        self.layers = SequentialEncoder(*[EncoderLayer(d_model=d_model,
                                                    ffn_hidden=ffn_hidden,
                                                    num_heads=num_heads,
                                                    drop_prob=drop_prob) for _ in range(num_layers)])
 
     def forward(self, x, mask=None):
-        x = self.layers(x, mask=mask)
+        x = self.layers(x, mask)
         return x

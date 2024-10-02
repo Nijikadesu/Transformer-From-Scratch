@@ -12,7 +12,9 @@ def scaled_dot_product(q, k, v, mask=None):
     # scaled product in order to prevent gradient vanishing
     scaled = torch.matmul(q, k.transpose(-2, -1)) / math.sqrt(d_k)
     if mask is not None:
+        scaled = scaled.permute(1, 0, 2, 3)
         scaled += mask
+        scaled = scaled.permute(1, 0, 2, 3)
     attention = F.softmax(scaled, dim=-1)
     values = torch.matmul(attention, v)
     return values, attention

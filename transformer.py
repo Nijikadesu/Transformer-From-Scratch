@@ -4,7 +4,11 @@ from structure.decoder import Decoder
 from data_utils.tokenizer import SentenceTokenizer
 
 class Transformer(nn.Module):
-
+    """
+    Implementation of the Transformer Neaural Network.
+    In this file we combine the structure we build before and create the whole Transformer from scratch!
+    Nice work!
+    """
     def __init__(self, cfg):
         super().__init__()
 
@@ -29,10 +33,9 @@ class Transformer(nn.Module):
                 enc_end_token=False,
                 dec_start_token=False,
                 dec_end_token=False):
-        x = self.source_tokenizer(x, enc_start_token=enc_start_token, enc_end_token=enc_end_token)
-        y = self.target_tokenizer(y, dec_start_token=dec_start_token, dec_end_token=dec_end_token)
+        x = self.source_tokenizer(x, start_token=enc_start_token, end_token=enc_end_token) # tokenizing x
+        y = self.target_tokenizer(y, start_token=dec_start_token, end_token=dec_end_token) # tokenizing y
         x = self.encoder(x, mask=encoder_self_attention_mask)
-        x, y = x.to(device), y.to(device)
         out = self.decoder(x, y, self_mask=decoder_self_attention_mask, cross_mask=decoder_cross_attention_mask)
         out = self.linear(out)
         return out

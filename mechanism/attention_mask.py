@@ -2,10 +2,13 @@ import torch
 import torch.nn as nn
 import numpy as np
 import math
+from config import Config
 
 class AttentionMask():
     """
-    Create Mask For Self-attention & Cross-attention
+    Implementation of Attention Mask Mechanism.
+    Create Mask For Self-attention & Cross-attention.
+    Mask padding tokens and advanced tokens which we don't want the model to see in cross-attention.
     """
     def __init__(self, cfg):
         self.NEG_INFTY = cfg.NEG_INFTY
@@ -13,16 +16,16 @@ class AttentionMask():
 
     def create_masks(self, source_language_batch, target_language_batch):
         num_sentences = len(source_language_batch)
-        look_ahead_mask = torch.full([self.max_sequence_length, self.max_sequence_length], False)
+        look_ahead_mask = torch.full([self.max_sequence_length, self.max_sequence_length], True)
         look_ahead_mask = torch.triu(look_ahead_mask, diagonal=1)
-        encoder_padding_mask = torch.full([num_sentences, self.max_sequence_length], False)
+        encoder_padding_mask = torch.full([num_sentences, self.max_sequence_length, self.max_sequence_length], False)
         decoder_padding_mask_self_attention = torch.full([num_sentences, self.max_sequence_length, self.max_sequence_length], False)
         decoder_padding_mask_cross_attention = torch.full([num_sentences, self.max_sequence_length, self.max_sequence_length], False)
 
         for idx in range(num_sentences):
             source_sentence_length, target_sentence_length = len(source_language_batch[idx]), len(target_language_batch[idx])
-            source_chars_to_padding_mask = np.arrange(source_sentence_length + 1, self.max_sequence_length)
-            target_chars_to_padding_mask = np.arrange(target_sentence_length + 1, self.max_sequence_length)
+            source_chars_to_padding_mask = np.arange(source_sentence_length + 1, self.max_sequence_length)
+            target_chars_to_padding_mask = np.arange(target_sentence_length + 1, self.max_sequence_length)
             encoder_padding_mask[idx, :, source_chars_to_padding_mask] = True
             encoder_padding_mask[idx, source_chars_to_padding_mask, :] = True
             decoder_padding_mask_self_attention[idx, :, target_chars_to_padding_mask] = True
